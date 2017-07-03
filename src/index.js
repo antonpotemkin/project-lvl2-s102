@@ -1,6 +1,9 @@
 import program from 'commander';
+import packageJson from '../package.json';
 
 const help = program
+  .version(packageJson.version)
+  .description(packageJson.description)
   .option('-f, --format [type]', 'Output format')
   .arguments('<firstConfig> <secondConfig>')
   .action((cmd, env) => {
