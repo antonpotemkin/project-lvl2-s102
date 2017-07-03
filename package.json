@@ -1,12 +1,13 @@
 {
   "name": "gendiff_project_ap",
   "version": "1.0.1",
-  "description": "gendiff project from Hexlet (js backend)",
+  "description": "Compares two configuration files and shows a difference.",
   "main": "index.js",
   "bin": {
     "gendiff": "dist/bin/gendiff.js"
   },
   "scripts": {
+    "test": "jest",
     "babel-node": "babel-node",
     "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
     "prepublish": "npm run build",
@@ -36,6 +37,7 @@
     "babel-preset-stage-0": "*",
     "eslint": "*",
     "eslint-config-airbnb-base": "*",
-    "eslint-plugin-import": "*"
+    "eslint-plugin-import": "*",
+    "jest": "^20"
   }
 }
