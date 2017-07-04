@@ -1,8 +1,8 @@
 {
   "name": "gendiff_project_ap",
-  "version": "1.0.2",
+  "version": "1.0.9",
   "description": "Compares two configuration files and shows a difference.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "bin": {
     "gendiff": "dist/bin/gendiff.js"
   },
@@ -27,7 +27,8 @@
   },
   "homepage": "https://github.com/antonpotemkin/project-lvl2-s102#readme",
   "dependencies": {
-    "commander": "*"
+    "commander": "*",
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "babel-cli": "*",
