@@ -2,7 +2,7 @@ import program from 'commander';
 import packageJson from '../package.json';
 import comporator from './comporator';
 
-program
+export default () => program
   .version(packageJson.version)
   .description(packageJson.description)
   .option('-f, --format [type]', 'Output format')
@@ -11,5 +11,3 @@ program
     console.log(comporator(firstConfig, secondConfig));
   })
   .parse(process.argv);
-
-export default () => program.action;
