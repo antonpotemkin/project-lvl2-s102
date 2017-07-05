@@ -1,8 +1,8 @@
 import gendiff from '../src/comporator';
 
 it('#gendiff', () => {
-  const pathBefore = 'jsons/before.json';
-  const pathAfter = 'jsons/after.json';
+  const pathBefore = '__tests__/fixtures/before.json';
+  const pathAfter = '__tests__/fixtures/after.json';
   const expected = `{
     host: hexlet.io
   + timeout: 20
