@@ -22,4 +22,11 @@ describe('Test gendiff', () => {
     const actual = gendiff(pathBefore, pathAfter);
     expect(actual).toBe(expected);
   });
+
+  it('#Ini', () => {
+    const pathBefore = '__tests__/fixtures/ini/before.ini';
+    const pathAfter = '__tests__/fixtures/ini/after.ini';
+    const actual = gendiff(pathBefore, pathAfter);
+    expect(actual).toBe(expected);
+  });
 });
