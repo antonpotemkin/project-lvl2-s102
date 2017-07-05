@@ -1,5 +1,5 @@
 import lodash from 'lodash';
-import reader from './readerJson';
+import reader from './reader';
 
 const div = '\n  ';
 
