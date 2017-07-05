@@ -1,11 +1,11 @@
 import lodash from 'lodash';
-import reader from './reader';
+import read from './reader';
 
 const div = '\n  ';
 
 export default (path1, path2) => {
-  const beforeJson = reader(path1);
-  const afterJson = reader(path2);
+  const beforeJson = read(path1);
+  const afterJson = read(path2);
   const mixedKeys = lodash.union(Object.keys(beforeJson), Object.keys(afterJson));
   const result = mixedKeys
     .reduce((acc, value) => {
