@@ -1,6 +1,6 @@
 import program from 'commander';
 import { version, description } from '../package.json';
-import comporator from './comporator';
+import gendiff from './';
 
 program
   .version(version)
@@ -8,7 +8,7 @@ program
   .option('-f, --format [type]', 'Output format')
   .arguments('<firstConfig> <secondConfig>')
   .action((firstConfig, secondConfig) => {
-    console.log(comporator(firstConfig, secondConfig));
+    console.log(gendiff(firstConfig, secondConfig));
   });
 
 export default () => program.parse(process.argv);

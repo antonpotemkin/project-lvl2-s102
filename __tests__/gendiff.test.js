@@ -1,4 +1,4 @@
-import gendiff from '../src/comporator';
+import gendiff from '../src/';
 
 describe('Test gendiff', () => {
   const expected = `{

@@ -6,7 +6,7 @@ const readJson = query => JSON.parse(fs.readFileSync(`./${query}`, 'utf-8'));
 
 const readYaml = query => yaml.safeLoad(fs.readFileSync(`./${query}`, 'utf-8'));
 
-export default (query) => {
+const getConfig = (query) => {
   const { ext } = path.parse(query);
   switch (ext) {
     case '.yaml':
@@ -14,4 +14,10 @@ export default (query) => {
     default:
       return readJson(query);
   }
+};
+
+export default (firstQuery, secondQuery) => {
+  const firstConfig = getConfig(firstQuery);
+  const secondConfig = getConfig(secondQuery);
+  return { firstConfig, secondConfig };
 };
