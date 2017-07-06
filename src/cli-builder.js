@@ -1,10 +1,10 @@
 import program from 'commander';
-import packageJson from '../package.json';
+import { version, description } from '../package.json';
 import comporator from './comporator';
 
 program
-  .version(packageJson.version)
-  .description(packageJson.description)
+  .version(version)
+  .description(description)
   .option('-f, --format [type]', 'Output format')
   .arguments('<firstConfig> <secondConfig>')
   .action((firstConfig, secondConfig) => {
