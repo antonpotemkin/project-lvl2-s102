@@ -1,13 +1,13 @@
-import read from './reader';
+import fs from 'fs';
+import path from 'path';
+import getParser from './parsers';
 import buildAst from './ast-builder';
 import buildString from './string-builder';
 
-// level need to define quantity of indent
-// flag show parent operation
-
-
 export default (firstQuery, secondQuery) => {
-  const { firstConfig, secondConfig } = read(firstQuery, secondQuery);
+  const { ext } = path.parse(firstQuery);
+  const firstConfig = getParser(ext)(fs.readFileSync(`./${firstQuery}`, 'utf-8'));
+  const secondConfig = getParser(ext)(fs.readFileSync(`./${secondQuery}`, 'utf-8'));
   const ast = buildAst(firstConfig, secondConfig);
   return buildString(ast);
 };
