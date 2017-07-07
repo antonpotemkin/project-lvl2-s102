@@ -2,11 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import getParser from './parsers';
 
-const read = query => fs.readFileSync(`./${query}`, 'utf-8');
-
 export default (firstQuery, secondQuery) => {
   const { ext } = path.parse(firstQuery);
-  const firstConfig = getParser(ext)(read(firstQuery));
-  const secondConfig = getParser(ext)(read(secondQuery));
+  const firstConfig = getParser(ext)(fs.readFileSync(`./${firstQuery}`, 'utf-8'));
+  const secondConfig = getParser(ext)(fs.readFileSync(`./${secondQuery}`, 'utf-8'));
   return { firstConfig, secondConfig };
 };
