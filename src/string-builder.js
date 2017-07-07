@@ -1,29 +1,28 @@
 import lodash from 'lodash';
 
-const buildString = (ast, level = 0, flag = false) => {
+const buildString = (ast, level = 0) => {
   const div = '\n  ';
   const indent = lodash.repeat('    ', level);
   const result = ast
-    .reduce((acc, value) => {
-      const hasChildren = value.newValue instanceof Array || value.oldValue instanceof Array;
-      switch (value.operation) {
-        case 'add': {
-          const operation = flag ? '  ' : '+ ';
-          const body = hasChildren ? buildString(value.newValue, level + 1, true) : value.newValue;
-          return `${acc}${div}${indent}${operation}${value.key}: ${body}`;
+    .reduce((acc, node) => {
+      switch (node.operation) {
+        case 'added': {
+          const operation = '+ ';
+          const body = node.type === 'tree' ? buildString(node.child, level + 1) : node.value;
+          return `${acc}${div}${indent}${operation}${node.key}: ${body}`;
         }
-        case 'del': {
-          const operation = flag ? '  ' : '- ';
-          const body = hasChildren ? buildString(value.oldValue, level + 1, true) : value.oldValue;
-          return `${acc}${div}${indent}${operation}${value.key}: ${body}`;
+        case 'removed': {
+          const operation = '- ';
+          const body = node.type === 'tree' ? buildString(node.child, level + 1) : node.value;
+          return `${acc}${div}${indent}${operation}${node.key}: ${body}`;
         }
-        case 'mod': {
-          return `${acc}${div}${indent}+ ${value.key}: ${value.newValue}`
-           + `${div}${indent}- ${value.key}: ${value.oldValue}`;
+        case 'updated': {
+          return `${acc}${div}${indent}+ ${node.key}: ${node.updatedValue}`
+           + `${div}${indent}- ${node.key}: ${node.value}`;
         }
         default: {
-          const body = hasChildren ? buildString(value.newValue, level + 1) : value.newValue;
-          return `${acc}${div}${indent}  ${value.key}: ${body}`;
+          const body = node.type === 'tree' ? buildString(node.child, level + 1) : node.value;
+          return `${acc}${div}${indent}  ${node.key}: ${body}`;
         }
       }
     }, '{');
