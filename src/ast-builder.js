@@ -13,8 +13,8 @@ import lodash from 'lodash';
 const buildAst = (firstConfig, secondConfig, parent) => {
   const mixedKeys = lodash.union(Object.keys(firstConfig), Object.keys(secondConfig));
 
-  const hasChildren = value => firstConfig[value] instanceof Object
-    || secondConfig[value] instanceof Object;
+  const hasChildren = value => lodash.isObject(firstConfig[value]) ||
+    lodash.isObject(secondConfig[value]);
 
   const result = mixedKeys
     .map((value) => {
