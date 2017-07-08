@@ -2,40 +2,34 @@ import lodash from 'lodash';
 
 // node {
 //  key : value
-//  type: tree, leaf
-//  operation: added, removed, updated, notUpdated, modifinedParent
-//  child [node...]
-//  parent: node
-//  value: value
-//  updatedValue: value
+//  type: added, removed, updated, notUpdated, nested
+//  oldValue: value or Object
+//  newValue: value or Object
 // }
 
-const buildAst = (firstConfig, secondConfig, parent) => {
+const buildAst = (firstConfig, secondConfig) => {
   const mixedKeys = lodash.union(Object.keys(firstConfig), Object.keys(secondConfig));
-
-  const hasChildren = value => lodash.isObject(firstConfig[value]) ||
-    lodash.isObject(secondConfig[value]);
 
   const result = mixedKeys
     .map((value) => {
-      const node = { parent };
-      node.key = value;
-      node.type = hasChildren(value) ? 'tree' : 'leaf';
-      if (parent.operation === 'added' || parent.operation === 'removed') {
-        node.operation = 'modifinedParent';
-      } else if (!lodash.has(firstConfig, value)) {
-        node.operation = 'added';
+      const node = { key: value };
+      if (!lodash.has(firstConfig, value)) {
+        node.type = 'added';
+        node.newValue = secondConfig[value];
       } else if (!lodash.has(secondConfig, value)) {
-        node.operation = 'removed';
-      } else if (firstConfig[value] !== secondConfig[value] && node.type === 'leaf') {
-        node.operation = 'updated';
+        node.type = 'removed';
+        node.oldValue = firstConfig[value];
+      } else if (firstConfig[value] === secondConfig[value]) {
+        node.type = 'notUpdated';
+        node.oldValue = firstConfig[value];
+      } else if (lodash.isObject(firstConfig[value]) && lodash.isObject(secondConfig[value])) {
+        node.type = 'nested';
+        node.oldValue = buildAst(firstConfig[value], secondConfig[value]);
       } else {
-        node.operation = 'notUpdated';
+        node.type = 'updated';
+        node.oldValue = firstConfig[value];
+        node.newValue = secondConfig[value];
       }
-      node.child = node.type === 'tree' ? buildAst(lodash.get(firstConfig, value, {}),
-        lodash.get(secondConfig, value, {}), node) : [];
-      node.updatedValue = node.type === 'leaf' ? lodash.get(secondConfig, value, '') : '';
-      node.value = node.type === 'leaf' ? lodash.get(firstConfig, value, node.updatedValue) : '';
       return node;
     });
   return result;
