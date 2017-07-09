@@ -1,6 +1,6 @@
 import program from 'commander';
 import { version, description } from '../package.json';
-import gendiff from './';
+import gendiff from '.';
 
 program
   .version(version)
