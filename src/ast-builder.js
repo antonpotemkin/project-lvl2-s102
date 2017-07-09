@@ -8,27 +8,32 @@ import lodash from 'lodash';
 //  children: node
 // }
 
-const buildAst = (firstConfig, secondConfig) => {
-  const mixedKeys = lodash.union(Object.keys(firstConfig), Object.keys(secondConfig));
+const createNode = (key, type, oldValue, newValue, children) =>
+  ({ key, type, oldValue, newValue, children });
 
-  const result = mixedKeys
-    .map((value) => {
-      const node = { key: value };
-      if (!lodash.has(firstConfig, value)) {
-        node.type = 'added';
-      } else if (!lodash.has(secondConfig, value)) {
-        node.type = 'removed';
-      } else if (firstConfig[value] === secondConfig[value]) {
-        node.type = 'notUpdated';
-      } else if (lodash.isObject(firstConfig[value]) && lodash.isObject(secondConfig[value])) {
-        node.type = 'nested';
-        node.children = buildAst(firstConfig[value], secondConfig[value]);
-      } else {
-        node.type = 'updated';
+const hasChilden = (firstValue, secondValue) =>
+  lodash.isObject(firstValue) && lodash.isObject(secondValue);
+
+const isEqual = (firstValue, secondValue) => firstValue === secondValue;
+
+const hasNotValue = (config, key) => !lodash.has(config, key);
+
+const buildAst = (firstConfig, secondConfig) => {
+  const unionKeys = lodash.union(Object.keys(firstConfig), Object.keys(secondConfig));
+
+  const result = unionKeys
+    .map((key) => {
+      if (hasChilden(firstConfig[key], secondConfig[key])) {
+        const children = buildAst(firstConfig[key], secondConfig[key]);
+        return createNode(key, 'nested', firstConfig[key], secondConfig[key], children);
+      } else if (hasNotValue(firstConfig, key)) {
+        return createNode(key, 'added', firstConfig[key], secondConfig[key], []);
+      } else if (hasNotValue(secondConfig, key)) {
+        return createNode(key, 'removed', firstConfig[key], secondConfig[key], []);
+      } else if (isEqual(firstConfig[key], secondConfig[key])) {
+        return createNode(key, 'notUpdated', firstConfig[key], secondConfig[key], []);
       }
-      node.oldValue = firstConfig[value];
-      node.newValue = secondConfig[value];
-      return node;
+      return createNode(key, 'updated', firstConfig[key], secondConfig[key], []);
     });
   return result;
 };
