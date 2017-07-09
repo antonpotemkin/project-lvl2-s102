@@ -1,39 +1,36 @@
 import lodash from 'lodash';
 
-// ast = [{ key:value, operation: operation, oldValue: oldValue, newValue: newValue}, ..., {}
+// node {
+//  key : value
+//  type: added, removed, updated, notUpdated, nested
+//  oldValue: value or Object
+//  newValue: value or Object
+// }
 
 const buildAst = (firstConfig, secondConfig) => {
   const mixedKeys = lodash.union(Object.keys(firstConfig), Object.keys(secondConfig));
 
-  const hasChildren = value => firstConfig[value] instanceof Object
-    || secondConfig[value] instanceof Object;
-
   const result = mixedKeys
     .map((value) => {
-      if (firstConfig[value] === undefined) {
-        const body = hasChildren(value) ? buildAst({}, secondConfig[value]) : secondConfig[value];
-        return { key: value,
-          operation: 'add',
-          newValue: body,
-        };
-      } else if (secondConfig[value] === undefined) {
-        const body = hasChildren(value) ? buildAst(firstConfig[value], {}) : firstConfig[value];
-        return { key: value,
-          operation: 'del',
-          oldValue: body,
-        };
-      } else if (firstConfig[value] !== secondConfig[value] && !hasChildren(value)) {
-        return { key: value,
-          operation: 'mod',
-          oldValue: firstConfig[value],
-          newValue: secondConfig[value],
-        };
+      const node = { key: value };
+      if (!lodash.has(firstConfig, value)) {
+        node.type = 'added';
+        node.newValue = secondConfig[value];
+      } else if (!lodash.has(secondConfig, value)) {
+        node.type = 'removed';
+        node.oldValue = firstConfig[value];
+      } else if (firstConfig[value] === secondConfig[value]) {
+        node.type = 'notUpdated';
+        node.oldValue = firstConfig[value];
+      } else if (lodash.isObject(firstConfig[value]) && lodash.isObject(secondConfig[value])) {
+        node.type = 'nested';
+        node.oldValue = buildAst(firstConfig[value], secondConfig[value]);
+      } else {
+        node.type = 'updated';
+        node.oldValue = firstConfig[value];
+        node.newValue = secondConfig[value];
       }
-      const body = hasChildren(value) ?
-        buildAst(firstConfig[value], secondConfig[value]) : secondConfig[value];
-      return { key: value,
-        newValue: body,
-      };
+      return node;
     });
   return result;
 };
