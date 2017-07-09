@@ -1,5 +1,5 @@
-import defaultRend from './renderers/defaultRenderer';
-import plainRend from './renderers/plainRenderer';
+import defaultRend from './defaultRenderer';
+import plainRend from './plainRenderer';
 
 export default (format) => {
   if (format === 'plain') {
