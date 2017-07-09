@@ -34,7 +34,7 @@ const buildDefaultString = (ast, level = 0) => {
            + `${div}${indent}- ${node.key}: ${oldValue}`;
         }
         case 'nested': {
-          const body = buildDefaultString(node.oldValue, level + 1);
+          const body = buildDefaultString(node.children, level + 1);
           return `${acc}${div}${indent}  ${node.key}: ${body}`;
         }
         default: {
@@ -52,7 +52,7 @@ const buildPlainString = (ast, property = []) => {
       const newProperty = lodash.concat(property, node.key);
       switch (node.type) {
         case 'nested': {
-          return buildPlainString(node.oldValue, newProperty);
+          return buildPlainString(node.children, newProperty);
         }
         case 'removed': {
           return `Property '${newProperty.join('.')}' was removed`;
