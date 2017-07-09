@@ -8,7 +8,7 @@ program
   .option('-f, --format [type]', 'Output format')
   .arguments('<firstConfig> <secondConfig>')
   .action((firstConfig, secondConfig) => {
-    console.log(gendiff(firstConfig, secondConfig));
+    console.log(gendiff(firstConfig, secondConfig, program.format));
   });
 
 export default () => program.parse(process.argv);

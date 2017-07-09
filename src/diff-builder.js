@@ -12,7 +12,7 @@ const valueToString = (obj, level) => {
   return obj;
 };
 
-const buildString = (ast, level = 0) => {
+const buildDefaultString = (ast, level = 0) => {
   const indent = lodash.repeat('    ', level);
   const result = ast
     .reduce((acc, node) => {
@@ -34,7 +34,7 @@ const buildString = (ast, level = 0) => {
            + `${div}${indent}- ${node.key}: ${oldValue}`;
         }
         case 'nested': {
-          const body = buildString(node.oldValue, level + 1);
+          const body = buildDefaultString(node.oldValue, level + 1);
           return `${acc}${div}${indent}  ${node.key}: ${body}`;
         }
         default: {
@@ -46,4 +46,39 @@ const buildString = (ast, level = 0) => {
   return `${result}\n${indent}}`;
 };
 
-export default buildString;
+const buildPlainString = (ast, property = []) => {
+  const result = ast
+    .map((node) => {
+      const newProperty = lodash.concat(property, node.key);
+      switch (node.type) {
+        case 'nested': {
+          return buildPlainString(node.oldValue, newProperty);
+        }
+        case 'removed': {
+          return `Property '${newProperty.join('.')}' was removed`;
+        }
+        case 'added': {
+          const value = lodash.isObject(node.newValue) ?
+            'complex value' : `value: '${node.newValue}'`;
+          return `Property '${newProperty.join('.')}' was added with ${value}`;
+        }
+        case 'updated': {
+          const oldValue = lodash.isObject(node.oldValue) ?
+            'complex value' : node.oldValue;
+          const newValue = lodash.isObject(node.newValue) ?
+            'complex value' : node.newValue;
+          return `Property '${newProperty.join('.')}' was updated. From '${oldValue}' to '${newValue}'`;
+        }
+        default:
+          return '';
+      }
+    });
+  return result.filter(value => value !== '').join('\n');
+};
+
+export default (ast, format) => {
+  if (format === 'plain') {
+    return buildPlainString(ast);
+  }
+  return buildDefaultString(ast);
+};
