@@ -9,7 +9,9 @@ import lodash from 'lodash';
 // }
 
 const createNode = (key, type, oldValue, newValue, children) =>
-  ({ key, type, oldValue, newValue, children });
+  ({
+    key, type, oldValue, newValue, children,
+  });
 
 const hasChilden = (firstValue, secondValue) =>
   lodash.isObject(firstValue) && lodash.isObject(secondValue);
