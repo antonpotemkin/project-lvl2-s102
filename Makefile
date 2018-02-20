@@ -10,6 +10,10 @@ plain:
 json:
 	npm run babel-node -- src/bin/gendiff.js --format json __tests__/fixtures/json/before.json __tests__/fixtures/json/after.json
 
+build:
+	rm -rf dist
+	npm run build
+
 publish:
 	npm publish
 
