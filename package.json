@@ -41,6 +41,7 @@
     "eslint": "*",
     "eslint-config-airbnb-base": "*",
     "eslint-plugin-import": "*",
+    "eslint-plugin-jest": "*",
     "jest": "^21"
   }
 }
