@@ -6,6 +6,12 @@
   "bin": {
     "gendiff": "dist/bin/gendiff.js"
   },
+  "engines": {
+    "node": "8"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "test": "jest",
     "babel-node": "babel-node",
@@ -24,6 +30,9 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/antonpotemkin/project-lvl2-s102/issues"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "homepage": "https://github.com/antonpotemkin/project-lvl2-s102#readme",
   "dependencies": {
